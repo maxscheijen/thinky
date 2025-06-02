@@ -1,19 +1,22 @@
 [project]
-name = "nn-agents"
+name = "thinky"
 dynamic = ["version"]
-description = "Add your description here"
+description = "Deploy agents easily"
 readme = "README.md"
 authors = [
     { name = "Max Scheijen", email = "maxscheijen@gmail.com" }
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "fastapi>=0.115.12",
+    "ollama>=0.5.1",
+    "openai-agents>=0.0.16",
     "rich>=14.0.0",
     "typer>=0.16.0",
 ]
 
 [project.scripts]
-nn-agents = "nn_agents.cli:main"
+thinky = "thinky.cli:main"
 
 
 [build-system]
@@ -22,5 +25,12 @@ build-backend = "pdm.backend"
 
 
 [tool.pdm]
-version = { source = "file", path = "src/nn_agents/__init__.py" }
+version = { source = "file", path = "src/thinky/__init__.py" }
 distribution = true
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.2.0",
+    "ruff>=0.11.12",
+    "ty>=0.0.1a8",
+]

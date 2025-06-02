@@ -8,7 +8,7 @@ from rich.logging import RichHandler
 def setup_logging(
     terminal_width: Union[int, None] = None, level: int = logging.INFO
 ) -> None:
-    logger = logging.getLogger("nn-agents")
+    logger = logging.getLogger(__name__)
     console = Console(width=terminal_width) if terminal_width else None
     rich_handler = RichHandler(
         show_time=False,
