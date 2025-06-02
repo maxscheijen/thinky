@@ -1,0 +1,26 @@
+[project]
+name = "nn-agents"
+dynamic = ["version"]
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Max Scheijen", email = "maxscheijen@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "rich>=14.0.0",
+    "typer>=0.16.0",
+]
+
+[project.scripts]
+nn-agents = "nn_agents.cli:main"
+
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+version = { source = "file", path = "src/nn_agents/__init__.py" }
+distribution = true
