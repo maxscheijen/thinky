@@ -7,7 +7,7 @@ from thinky.exceptions import AgentRegistrationException
 agent_registry: Dict[str, Callable[..., Agent]] = {}
 
 
-def register_agent(func: Callable[..., Agent], name: Optional) -> Callable[..., Agent]:  # type: ignore
+def register_agent(func: Callable[..., Agent]) -> Callable[..., Agent]:  # type: ignore
     """
     Decorator to register an agent creation function in the global agent registry.
 
