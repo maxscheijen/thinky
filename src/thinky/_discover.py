@@ -1,28 +1,11 @@
 import importlib
 import logging
-import os
 import pkgutil
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Union
 
-
-def _get_default_paths() -> Optional[Path]:
-    """
-    Attempts to locate a default agent directory from a predefined list of paths.
-
-    Returns:
-        Path: The first valid file path found in the list.
-
-    Raises:
-        AgentsCLIException: If no valid default agent file path is found.
-    """
-    potential_paths = []
-
-    for potential_path in potential_paths:
-        path = Path(potential_path)
-        if path.is_dir():
-            return path
+from thinky import AGENT_DIR_PATH
 
 
 @dataclass
@@ -59,19 +42,8 @@ def get_agent_imports(path: Union[Path, None] = None):
         Exception: If `_get_module_data_from_path` or dynamic imports fail unexpectedly.
     """
 
-    AGENT_DIR_PATH = "AGENT_DIR_PATH"
-
     if not path:
-        path = _get_default_paths()
-
-    if path is None:
-        path_str = os.environ.get(AGENT_DIR_PATH)
-        if path_str is None:
-            raise RuntimeError(
-                f"Missing required environment variable: {AGENT_DIR_PATH}"
-            )
-        else:
-            path = Path(path_str)
+        path = get_agent_path()
 
     mod_data = _get_module_data_from_path(path)
 
@@ -89,3 +61,14 @@ def get_agent_imports(path: Union[Path, None] = None):
             logging.debug(f"Imported: {module_name}")
         except (ImportError, ValueError) as e:
             logging.error(f"Import error for module '{module_name}': {e}")
+
+
+def get_agent_path(path: Optional[Path] = None) -> Path:
+    if path is None:
+        if AGENT_DIR_PATH is None:
+            raise RuntimeError(
+                f"Missing required environment variable: {AGENT_DIR_PATH}"
+            )
+        else:
+            path = Path(AGENT_DIR_PATH)
+    return path
