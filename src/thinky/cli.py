@@ -7,6 +7,7 @@ from rich.console import Console
 
 from . import __version__
 from ._discover import get_agent_imports
+from ._project_setup import project_init
 from ._run import run_agent
 from .logger import setup_logging
 
@@ -93,6 +94,18 @@ def api(
         workers=None,
         factory=True,
     )
+
+
+@app.command(help="Initialize and setup a new agent project.")
+def init():
+    name = input("What is the name of your project: ")
+
+    with console.status("Setting up agent project..."):
+        project_init(name)
+        console.print("Project setup succesfull!")
+        console.print(
+            "Activate .venv with: [green]source[/green] [yellow].venv/bin/activate[/yellow]"
+        )
 
 
 def main():
