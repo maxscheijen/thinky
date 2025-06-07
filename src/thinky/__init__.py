@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 
 from thinky.client import get_client
 
-from ._constants import AGENT_DIR_PATH
 from ._registry import agent_registry, get_agent, register_agent
 
 load_dotenv()
@@ -21,4 +20,4 @@ set_default_openai_api("chat_completions")
 
 __version__ = "0.0.1"
 
-__all__ = ["AGENT_DIR_PATH", "agent_registry", "get_agent", "register_agent"]
+__all__ = ["agent_registry", "get_agent", "register_agent"]
