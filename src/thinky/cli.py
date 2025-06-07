@@ -3,13 +3,18 @@ from typing import Annotated, Union
 
 import typer
 from rich import print
+from rich.console import Console
 
 from . import __version__
 from ._discover import get_agent_imports
+from ._run import run_agent
 from .logger import setup_logging
 
 app = typer.Typer(rich_markup_mode="rich")
 logger = logging.getLogger(__name__)
+console = Console()
+
+get_agent_imports()
 
 
 def version_callback(value: bool) -> None:
@@ -20,7 +25,7 @@ def version_callback(value: bool) -> None:
 
 @app.callback()
 def callback(
-    ersion: Annotated[
+    version: Annotated[
         Union[bool, None],
         typer.Option(
             "--version", help="Show the version and exit.", callback=version_callback
@@ -45,21 +50,22 @@ def callback(
 def list():
     from thinky._registry import agent_registry
 
-    get_agent_imports()
-
     available_agent_names = [k for k in agent_registry.keys()]
     for agent in available_agent_names:
         print(f"- {agent}")
 
 
 @app.command()
-def run(agent: Annotated[str, typer.Argument(help="The name of the agent to run")]):
-    from . import get_agent
+def run(
+    agent: Annotated[str, typer.Argument(help="The name of the agent to run")],
+    input: Annotated[str, typer.Argument(help="The initial input to the agent.")],
+):
+    import asyncio
 
-    get_agent_imports()
-    selected_agent = get_agent(agent_id=agent)
-    print(selected_agent.name)
-    print(selected_agent.tools)
+    with console.status(f"Agent '{agent}' running..."):
+        result = asyncio.run(run_agent(agent, input))
+
+    console.print(result.final_output)
 
 
 @app.command()
