@@ -1,28 +1,50 @@
 [project]
 name = "thinky"
 dynamic = ["version"]
-description = "Deploy agents easily"
+description = "Build, run and reploy openai-agents easily."
 readme = "README.md"
 authors = [
-    { name = "Max Scheijen", email = "maxscheijen@gmail.com" }
+    { name = "Max Scheijen"}
 ]
-requires-python = ">=3.13"
+license = "Apache-2.0"
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Utilities",
+]
+
 dependencies = [
     "fastapi>=0.115.12",
     "ollama>=0.5.1",
     "openai-agents>=0.0.16",
+    "python-dotenv>=1.1.0",
     "rich>=14.0.0",
     "typer>=0.16.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/maxscheijen/thinky"
+Documentation = "https://llm.datasette.io/"
+Issues = "https://github.com/maxscheijen/thinky/issues"
+CI = "https://github.com/maxscheijen/thinky/actions"
+Changelog = "https://github.com/maxscheijen/thinky/releases"
+
 [project.scripts]
 thinky = "thinky.cli:main"
-
 
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
-
 
 [tool.pdm]
 version = { source = "file", path = "src/thinky/__init__.py" }
