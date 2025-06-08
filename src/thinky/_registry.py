@@ -67,6 +67,24 @@ def get_agent(agent_id: str) -> Agent:
     return agent_callable()
 
 
+def get_agent_path(path: Optional[Path] = None) -> Path:
+    """Get the path to the agent directory.
+
+    Args:
+        path (Optional[Path]): Relative path to the agents directory.
+
+    Returns:
+        Path: Relative path the agents directory.
+    """
+    if path is None:
+        path_env = os.environ.get("AGENT_DIR_PATH")
+        if path_env is None:
+            raise RuntimeError("Missing required environment variable: AGENT_DIR_PATH")
+        else:
+            path = Path(path_env)
+    return path
+
+
 @dataclass
 class ModuleData:
     module_import_str: str
@@ -120,21 +138,3 @@ def get_agent_imports(path: Union[Path, None] = None):
             logging.debug(f"Imported: {module_name}")
         except (ImportError, ValueError) as e:
             logging.error(f"Import error for module '{module_name}': {e}")
-
-
-def get_agent_path(path: Optional[Path] = None) -> Path:
-    """Get the path to the agent directory.
-
-    Args:
-        path (Optional[Path]): Relative path to the agents directory.
-
-    Returns:
-        Path: Relative path the agents directory.
-    """
-    if path is None:
-        path_env = os.environ.get("AGENT_DIR_PATH")
-        if path_env is None:
-            raise RuntimeError("Missing required environment variable: AGENT_DIR_PATH")
-        else:
-            path = Path(path_env)
-    return path
