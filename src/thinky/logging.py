@@ -4,11 +4,13 @@ from typing import Union
 from rich.console import Console
 from rich.logging import RichHandler
 
+console = Console()
+
 
 def setup_logging(
     terminal_width: Union[int, None] = None, level: int = logging.INFO
 ) -> None:
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger()
     console = Console(width=terminal_width) if terminal_width else None
     rich_handler = RichHandler(
         show_time=False,

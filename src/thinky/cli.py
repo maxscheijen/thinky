@@ -3,29 +3,29 @@ from typing import Annotated, Union
 
 import typer
 from rich import print
-from rich.console import Console
+
+from thinky._registry import agent_registry
 
 from . import __version__
 from ._discover import get_agent_imports
 from ._project_setup import project_init
 from ._run import run_agent
-from .logger import setup_logging
+from .logging import console, setup_logging
 
-app = typer.Typer(rich_markup_mode="rich")
+app = typer.Typer()
+
 logger = logging.getLogger(__name__)
-console = Console()
-
-get_agent_imports()
 
 
 def version_callback(value: bool) -> None:
     if value:
-        print(f"thinky version: [green]{__version__}[/green]")
+        print(f"Thinky CLI version: [green]{__version__}[/green]")
         raise typer.Exit()
 
 
 @app.callback()
 def callback(
+    ctx: typer.Context,
     version: Annotated[
         Union[bool, None],
         typer.Option(
@@ -35,25 +35,31 @@ def callback(
     verbose: bool = typer.Option(False, help="Enable verbose output"),
 ) -> None:
     """
-    Thinky CLI - The [bold]nn-agents[/bold] command line app.
+    Thinky CLI - The [bold]thinky[/bold] command line app.
 
-    Manage your [bold]thinky[/bold] projects, run your agents, api, and more.
+    Manage your [bold]thinky[/bold] projects, buidl, host and run your Agents.
 
-    Read more in the docs: [link=https://fastapi.tiangolo.com/fastapi-cli/]https://fastapi.tiangolo.com/fastapi-cli/[/link].
+    Read more in the docs: [link=https://thinky.maxscheijen.com]https://thinky.maxscheijen.com[/link].
     """
-
     log_level = logging.DEBUG if verbose else logging.INFO
 
     setup_logging(level=log_level)
 
+    if ctx.invoked_subcommand != "api":
+        get_agent_imports()
+
 
 @app.command(help="List all the available agents")
 def list():
-    from thinky._registry import agent_registry
-
     available_agent_names = [k for k in agent_registry.keys()]
-    for agent in available_agent_names:
-        print(f"- {agent}")
+
+    if available_agent_names:
+        print("[bold]Available Agents[/bold]:")
+        for i, agent in enumerate(available_agent_names):
+            number_format = f"{i + 1}."
+            print(f"{number_format:<3} {agent}")
+    else:
+        print("[bold]No Available Agents[/bold]")
 
 
 @app.command()
@@ -61,6 +67,8 @@ def run(
     agent: Annotated[str, typer.Argument(help="The name of the agent to run")],
     input: Annotated[str, typer.Argument(help="The initial input to the agent.")],
 ):
+    """Run your agent with a given input message."""
+
     import asyncio
 
     with console.status(f"Agent '{agent}' running..."):
@@ -74,7 +82,7 @@ def api(
     host: Annotated[
         str,
         typer.Option(
-            help="The host to server on. For local development use [blue]127.0.0.1[/blue]. To enable public access, e.g. in a container, use all the IP address available with [blue]0.0.0.0[/blue]."
+            help="The host to serve on. For local development use [blue]127.0.0.1[/blue]. To enable public access, e.g. in a container, use all the IP address available with [blue]0.0.0.0[/blue]."
         ),
     ] = "127.0.0.1",
     port: Annotated[
@@ -84,6 +92,7 @@ def api(
         ),
     ] = 8000,
 ):
+    """Host your registerd agents in a web server."""
     import uvicorn
 
     uvicorn.run(
@@ -96,8 +105,10 @@ def api(
     )
 
 
-@app.command(help="Initialize and setup a new agent project.")
+@app.command()
 def init():
+    """Initialize and setup a new agent project."""
+
     name = input("What is the name of your project: ")
 
     with console.status("Setting up agent project..."):
@@ -108,5 +119,5 @@ def init():
         )
 
 
-def main():
+def main() -> None:
     app()

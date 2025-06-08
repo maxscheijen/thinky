@@ -1,3 +1,4 @@
+from logging import getLogger
 from typing import Callable, Dict
 
 from agents import Agent
@@ -5,6 +6,8 @@ from agents import Agent
 from thinky.exceptions import AgentRegistrationException
 
 agent_registry: Dict[str, Callable[..., Agent]] = {}
+
+logger = getLogger()
 
 
 def register_agent(func: Callable[..., Agent]) -> Callable[..., Agent]:  # type: ignore
@@ -25,8 +28,12 @@ def register_agent(func: Callable[..., Agent]) -> Callable[..., Agent]:  # type:
     """
     name: str = func.__name__  # type: ignore
     if name in agent_registry:
-        raise AgentRegistrationException(f"Agent '{name}' is already registered.")
+        message = f"Agent '{name}' is already registered."
+        logger.error(message)
+        raise AgentRegistrationException(message)
+
     agent_registry[name] = func
+    logger.debug(f"Registerd agent '{name}'")
     return func
 
 
@@ -50,4 +57,5 @@ def get_agent(agent_id: str) -> Agent:
         raise AgentRegistrationException(f"Agent '{agent_id}' is not registered.")
 
     agent_callable = agent_registry[agent_id]
+    logger.debug(f"Get agent '{agent_id}'")
     return agent_callable()
