@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -84,7 +85,11 @@ def create_file(path: Path, content: str):
 def project_init(name: str, verbose: bool = False) -> None:
     name = sanitize(string=name)
 
-    # TODO: Check if `uv` is avialable on the system.
+    # Check if `uv` is avialable on the system.
+    if not shutil.which("uv"):
+        raise ValueError(
+            "'uv' is not avialable. See: https://docs.astral.sh/uv/getting-started/installation/"
+        )
 
     # Create project using `uv`
     project_init_cmd = ["uv", "init", "--name", name, "--lib"]
