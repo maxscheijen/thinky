@@ -7,6 +7,8 @@ from typing import Optional, Union
 
 from thinky import AGENT_DIR_PATH
 
+logger = logging.getLogger(__name__)
+
 
 @dataclass
 class ModuleData:
@@ -17,7 +19,9 @@ class ModuleData:
 
 def _get_module_data_from_path(path: Path) -> ModuleData:
     """Derives module import information from a given directory path."""
+    logger.debug(f"Using path: {path}")
     use_path = path.resolve()
+    logger.debug(f"Importing agents from: {use_path}")
     module_str = ".".join(use_path.parts[-2:])
 
     return ModuleData(
