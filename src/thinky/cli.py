@@ -12,7 +12,7 @@ from ._registry import get_agent_imports
 from ._run import run_agent
 from .logging import console, setup_logging
 
-app = typer.Typer()
+app = typer.Typer(rich_markup_mode="rich")
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ def callback(
     """
     Thinky CLI - The [bold]thinky[/bold] command line app.
 
-    Manage your [bold]thinky[/bold] projects, buidl, host and run your Agents.
+    Manage your [bold]thinky[/bold] projects, build, host and run your Agents.
 
     Read more in the docs: [link=https://thinky.maxscheijen.com]https://thinky.maxscheijen.com[/link].
     """
