@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 
 from thinky._discover import get_agent_imports
+from thinky.api.db import session
+from thinky.api.db.session import Base
 
 from .routes.v1 import v1_router
+
+Base.metadata.create_all(bind=session.engine)
 
 AGENT_DIR_PATH = "AGENT_DIR_PATH"
 

@@ -5,10 +5,27 @@ from pydantic import BaseModel
 
 class RunRequest(BaseModel):
     message: str
-    model: str
+    model_id: str
+    user_id: str
+    session_id: str
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "message": "What is the current weather in Amsterdam?",
+                    "model_id": "gpt-4o",
+                    "user_id": "1",
+                    "session_id": "1",
+                }
+            ]
+        }
+    }
 
 
-class RunResponse(RunRequest):
+class RunResponse(BaseModel):
+    id: int
+    message: str
     response: str
 
 
