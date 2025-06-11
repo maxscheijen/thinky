@@ -63,4 +63,4 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov --cov-report term-missing"
+addopts = "tests --cov thinky --cov-report term-missing"
