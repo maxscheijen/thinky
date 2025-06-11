@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from thinky._discover import get_agent_imports
+from thinky._registry import get_agent_imports
 from thinky.api.db import session
 from thinky.api.db.session import Base
 

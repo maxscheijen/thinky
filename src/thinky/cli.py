@@ -7,8 +7,8 @@ from rich import print
 from thinky._registry import agent_registry
 
 from . import __version__
-from ._discover import get_agent_imports
 from ._project_setup import project_init
+from ._registry import get_agent_imports
 from ._run import run_agent
 from .logging import console, setup_logging
 

@@ -1,5 +1,11 @@
+import importlib
+import logging
+import os
+import pkgutil
+from dataclasses import dataclass
 from logging import getLogger
-from typing import Callable, Dict
+from pathlib import Path
+from typing import Callable, Dict, Optional, Union
 
 from agents import Agent
 
@@ -59,3 +65,76 @@ def get_agent(agent_id: str) -> Agent:
     agent_callable = agent_registry[agent_id]
     logger.debug(f"Get agent '{agent_id}'")
     return agent_callable()
+
+
+def get_agent_path(path: Optional[Path] = None) -> Path:
+    """Get the path to the agent directory.
+
+    Args:
+        path (Optional[Path]): Relative path to the agents directory.
+
+    Returns:
+        Path: Relative path the agents directory.
+    """
+    if path is None:
+        path_env = os.environ.get("AGENT_DIR_PATH")
+        if path_env is None:
+            raise RuntimeError("Missing required environment variable: AGENT_DIR_PATH")
+        else:
+            path = Path(path_env)
+    return path
+
+
+@dataclass
+class ModuleData:
+    module_import_str: str
+    extra_sys_path: Path
+    module_paths: Path
+
+
+def _get_module_data_from_path(path: Path) -> ModuleData:
+    """Derives module import information from a given directory path."""
+    use_path = path.resolve()
+    module_str = ".".join(use_path.parts[-2:])
+
+    return ModuleData(
+        module_import_str=module_str,
+        extra_sys_path=use_path.parent.resolve(),
+        module_paths=use_path,
+    )
+
+
+def get_agent_imports(path: Union[Path, None] = None):
+    """Dynamically imports all submodules from a given agent directory path.
+
+    This function is useful for ensuring all relevant agent modules are loaded,
+    which is important for registration.
+
+    Args:
+        path (Union[Path, None], optional): The base path to the agent directory.
+            If None, a default path will be resolved using `_get_default_paths()`.
+
+    Raises:
+        NNAgentsCLIException: If no valid default path is found.
+        Exception: If `_get_module_data_from_path` or dynamic imports fail unexpectedly.
+    """
+
+    if not path:
+        path = get_agent_path()
+
+    mod_data = _get_module_data_from_path(path)
+
+    search_path = (
+        mod_data.module_paths
+        if mod_data.module_paths.is_dir()
+        else mod_data.module_paths.parent
+    )
+
+    for _, module_name, _ in pkgutil.walk_packages(
+        [search_path], mod_data.module_import_str + "."
+    ):
+        try:
+            importlib.import_module(module_name)
+            logging.debug(f"Imported: {module_name}")
+        except (ImportError, ValueError) as e:
+            logging.error(f"Import error for module '{module_name}': {e}")
