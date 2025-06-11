@@ -3,7 +3,7 @@ import os
 from typing import Literal, Optional, get_args
 
 from dotenv import load_dotenv
-from openai import AsyncAzureOpenAI, AsyncOpenAI
+from openai import AsyncOpenAI
 
 load_dotenv()
 
@@ -14,17 +14,16 @@ valid_providers = get_args(ProviderType)
 
 
 def client_selector(provider: ProviderType) -> AsyncOpenAI:
-    print(provider)
     if provider not in valid_providers:
         raise ValueError(
             f"'{provider}' is not a valid provider. Choose one of: {valid_providers}"
         )
 
     if provider == "openai":
-        return AsyncOpenAI()
+        raise NotImplementedError("The openai client is not yet implemented.")
 
     if provider == "azure":
-        return AsyncAzureOpenAI()
+        raise NotImplementedError("The azure openai client is not yet implemented.")
 
     if provider == "ollama":
         base_url = os.getenv("BASE_URL")
