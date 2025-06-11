@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
@@ -23,10 +23,10 @@ class RunRequest(BaseModel):
     }
 
 
-class RunResponse(BaseModel):
+class RunResponse(RunRequest):
     id: int
-    message: str
     response: str
+    steps: List[Dict]
 
 
 class ToolItemResponse(BaseModel):

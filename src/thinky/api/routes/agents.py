@@ -21,7 +21,7 @@ async def list_agents():
     return [k for k in agent_registry.keys()]
 
 
-@agent_router.post("/{agent_id}/run")
+@agent_router.post("/{agent_id}/run", response_model=schemas.RunResponse)
 async def create_agent_run(
     agent_id: str, body: schemas.RunRequest, db: Session = Depends(get_db)
 ):
