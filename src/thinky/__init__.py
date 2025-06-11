@@ -7,7 +7,7 @@ from agents import (
 )
 from dotenv import load_dotenv
 
-from thinky.client import ollama_client
+from thinky.client import get_client
 
 from ._constants import AGENT_DIR_PATH
 from ._registry import agent_registry, get_agent, register_agent
@@ -15,7 +15,7 @@ from ._registry import agent_registry, get_agent, register_agent
 load_dotenv()
 set_tracing_disabled(True)
 
-set_default_openai_client(ollama_client)
+set_default_openai_client(get_client())
 set_default_openai_api("chat_completions")
 
 
