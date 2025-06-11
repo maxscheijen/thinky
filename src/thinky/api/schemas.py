@@ -33,3 +33,14 @@ class ToolItemResponse(BaseModel):
     name: str
     description: str
     meta_data: Optional[Dict[str, Any]] = None
+
+
+class TraceResponse(BaseModel):
+    id: int
+    agent_id: str
+    session_id: int
+    user_id: int
+    model_id: str
+    message: str
+    response: str
+    steps: List[Dict]
