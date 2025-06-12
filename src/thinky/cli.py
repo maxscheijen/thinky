@@ -29,10 +29,18 @@ def callback(
     version: Annotated[
         Union[bool, None],
         typer.Option(
-            "--version", help="Show the version and exit.", callback=version_callback
+            "--version",
+            "-V",
+            help="Show the version and exit.",
+            callback=version_callback,
         ),
     ] = None,
-    verbose: bool = typer.Option(False, help="Enable verbose output"),
+    verbose: Annotated[
+        bool, typer.Option("--verbose", "-v", help="Enable verbose output: INFO")
+    ] = False,
+    vv: Annotated[
+        bool, typer.Option("-vv", help="Enable more verbose output: DEBUG")
+    ] = False,
 ) -> None:
     """
     Thinky CLI - The [bold]thinky[/bold] command line app.
@@ -41,7 +49,14 @@ def callback(
 
     Read more in the docs: [link=https://thinky.maxscheijen.com]https://thinky.maxscheijen.com[/link].
     """
-    log_level = logging.DEBUG if verbose else logging.INFO
+
+    if verbose:
+        log_level = logging.INFO
+    elif vv:
+        log_level = logging.DEBUG
+    else:
+        # Disable logging
+        log_level = logging.CRITICAL + 1
 
     setup_logging(level=log_level)
 
