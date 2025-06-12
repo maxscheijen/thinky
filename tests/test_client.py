@@ -14,9 +14,8 @@ def test_client_selector_valid_providers(provider):
     os.environ["AZURE_OPENAI_ENDPOINT"] = "fake-key"
     if provider == "openai":
         with pytest.raises(NotImplementedError):
-            client_selector(provider)
+            client = client_selector(provider)
         # assert isinstance(client, AsyncOpenAI)
     if provider == "azure":
-        with pytest.raises(NotImplementedError):
-            client_selector(provider)
-    # assert isinstance(client, AsyncAzureOpenAI)
+        client = client_selector(provider)
+        assert isinstance(client, AsyncAzureOpenAI)
