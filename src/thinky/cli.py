@@ -106,6 +106,12 @@ def api(
             help="The port to server on. You would normally have termination proxy on top (another program) handling HTTPS on port [blue]433[/blue], transferring the communication to your app."
         ),
     ] = 8000,
+    reload: Annotated[
+        bool,
+        typer.Option(
+            help="Reload the server when files change. Defaults to [blue]False[/false]"
+        ),
+    ] = False,
 ):
     """Host your registerd agents in a web server."""
     import uvicorn
@@ -114,7 +120,7 @@ def api(
         "thinky.api.main:create_app",
         host=host,
         port=port,
-        reload=True,
+        reload=reload,
         workers=None,
         factory=True,
     )
