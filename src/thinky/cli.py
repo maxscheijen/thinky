@@ -132,9 +132,9 @@ def init():
 
     name = input("What is the name of your project: ")
 
-    with console.status("Setting up agent project..."):
+    with console.status(f"Setting up {name} agent project..."):
         project_init(name)
-        console.print("Project setup succesfull!")
+        console.print(f"Project setup `{name}` succesfull!")
         console.print(
             "Activate .venv with: [green]source[/green] [yellow].venv/bin/activate[/yellow]"
         )

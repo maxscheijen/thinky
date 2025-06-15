@@ -61,7 +61,7 @@ Forecast: {period["detailedForecast"]}
 
 
 @register_agent
-def weather_forecast_agent():
+def weather_agent():
     return Agent(
         name="weather_agent",
         instructions="You are an assistend that is able to retieve weather data.",
