@@ -1,14 +1,19 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
 from thinky._registry import get_agent_imports
-from thinky.api.db import session
-from thinky.api.db.session import Base
+from thinky.api.db.session import init_db
 
 from .routes.v1 import v1_router
 
-Base.metadata.create_all(bind=session.engine)
 
-AGENT_DIR_PATH = "AGENT_DIR_PATH"
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    """Logic that needs to run before application start up."""
+    init_db()
+    get_agent_imports()
+    yield
 
 
 def create_app() -> FastAPI:
@@ -27,8 +32,7 @@ def create_app() -> FastAPI:
     Raises:
         RuntimeError: If `path` is not provided and `AGENT_DIR_PATH` is not set.
     """
-    get_agent_imports()
 
-    app = FastAPI()
+    app = FastAPI(lifespan=lifespan)
     app.include_router(v1_router)
     return app

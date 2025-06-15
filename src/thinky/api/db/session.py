@@ -14,6 +14,11 @@ SessionLocal: sessionmaker[Session] = sessionmaker(
 Base = declarative_base()
 
 
+def init_db() -> None:
+    """Initialize the database."""
+    Base.metadata.create_all(bind=engine)
+
+
 def get_db() -> Generator[Session, None, None]:
     """Dependency to get a database session.
 

@@ -1,11 +1,11 @@
 import json
 from typing import List
 
-from agents import Runner
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from thinky import agent_registry, get_agent
+from thinky import agent_registry
+from thinky._run import run_agent
 from thinky.api import schemas
 from thinky.api.db.models import AgentRun
 from thinky.api.db.session import get_db
@@ -28,8 +28,7 @@ async def create_agent_run(
     """Run an agent based on agent id."""
 
     try:
-        agent = get_agent(agent_id=agent_id)
-        response = await Runner.run(agent, input=body.message)
+        response = await run_agent(input=body.message, agent_id=agent_id)
 
         agent_run_db = AgentRun(
             agent_id=agent_id,

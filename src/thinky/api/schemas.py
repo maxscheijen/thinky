@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 class RunRequest(BaseModel):
     message: str
-    model_id: str
     user_id: str
     session_id: str
 
@@ -13,8 +12,7 @@ class RunRequest(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "message": "What is the current weather in Amsterdam?",
-                    "model_id": "gpt-4o",
+                    "message": "What is the current weather in New York City?",
                     "user_id": "1",
                     "session_id": "1",
                 }
@@ -40,7 +38,6 @@ class TraceResponse(BaseModel):
     agent_id: str
     session_id: int
     user_id: int
-    model_id: str
     message: str
     response: str
     steps: List[Dict]
