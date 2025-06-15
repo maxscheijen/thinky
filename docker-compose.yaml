@@ -5,7 +5,7 @@ services:
 
     # Host the FastAPI application on port 8000
     ports:
-      - "8000:8000"
+      - "8000:80"
 
     environment:
       AGENT_DIR_PATH: "src/thinky/_agents"
