@@ -1,6 +1,7 @@
 import os
 
 import pytest
+from openai import AsyncAzureOpenAI
 
 from thinky.client import client_selector
 

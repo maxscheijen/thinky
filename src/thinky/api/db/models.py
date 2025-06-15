@@ -10,7 +10,6 @@ class AgentRun(Base):
     agent_id = Column(String, index=True)
     session_id = Column(String, index=True)
     user_id = Column(String, index=True)
-    model_id = Column(String)
     message = Column(String)
     response = Column(String)
     steps = Column(String)
