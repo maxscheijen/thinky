@@ -24,13 +24,13 @@ classifiers = [
 ]
 
 dependencies = [
+    "click>=8.1.8",
     "fastapi>=0.115.12",
     "ollama>=0.5.1",
     "openai-agents>=0.0.16",
     "python-dotenv>=1.1.0",
     "rich>=14.0.0",
     "sqlalchemy>=2.0.41",
-    "typer>=0.16.0",
     "uvicorn>=0.34.3",
 ]
 
