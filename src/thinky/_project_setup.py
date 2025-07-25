@@ -3,6 +3,8 @@ import subprocess
 from importlib import resources
 from pathlib import Path
 
+import questionary
+
 from thinky import _agents
 
 example_file = resources.files(_agents) / "_example_agent.py"
@@ -24,6 +26,10 @@ def create_file(path: Path, content: str) -> None:
 def project_init(name: str, verbose: bool = False) -> None:
     name = sanitize(string=name)
 
+    provider = questionary.select(
+        "Select a model provider", choices=["ollama", "openai", "azure"]
+    ).ask()
+
     # Check if `uv` is avialable on the system.
     if not shutil.which("uv"):
         raise ValueError(
@@ -38,7 +44,7 @@ def project_init(name: str, verbose: bool = False) -> None:
     # Create .env with an example path
     sample_dot_env = (
         f"AGENT_DIR_PATH=src/{name}/{name}_agents\n"
-        f"PROVIDER=ollama\n"
+        f"PROVIDER={provider}\n"
         f"BASE_URL=http://localhost:11434/v1\n"
     )
     create_file(Path(".") / ".env", sample_dot_env)
