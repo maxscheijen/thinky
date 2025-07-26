@@ -129,11 +129,7 @@ def api(
 @app.command()
 def init():
     """Initialize and setup a new agent project."""
-
-    name = input("What is the name of your project: ")
-
-    project_init(name)
-    console.print(f"Project setup `{name}` succesfull!")
+    project_init()
     console.print(
         "Activate .venv with: [green]source[/green] [yellow].venv/bin/activate[/yellow]"
     )
